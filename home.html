@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop Management</title>
+    <link rel="stylesheet" href="styles.css">
+    <script defer src="script.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Shop Management</h1>
+        <h2 id="shopNameDisplay"></h2>
+
+        <!-- Stock Management -->
+        <div class="section">
+            <h3>Stock Management</h3>
+            <input type="text" id="itemName" placeholder="Item Name">
+            <input type="number" id="itemStock" placeholder="Stock Quantity">
+            <button onclick="addStock()">Add Stock</button>
+        </div>
+
+        <!-- Sell Items -->
+        <div class="section">
+            <h3>Sell Items</h3>
+            <select id="stockList"></select>
+            <input type="number" id="sellQuantity" placeholder="Quantity to Sell">
+            <button onclick="sellItem()">Sell</button>
+        </div>
+
+        <!-- Expenses Input -->
+        <div class="section">
+            <h3>Daily Expenses</h3>
+            <input type="number" id="expenseInput" placeholder="Enter Expense">
+            <button onclick="addExpense()">Add Expense</button>
+        </div>
+
+        <!-- Open/Close Shop -->
+        <div class="section">
+            <button onclick="toggleShop()">Open/Close Shop</button>
+            <p id="shopStatus">Shop is Closed</p>
+        </div>
+
+        <!-- Daily Summary (Pop-up) -->
+        <div id="summaryPopup" class="popup">
+            <h3>Daily Summary</h3>
+            <p id="summaryDetails"></p>
+            <button onclick="closePopup()">Close</button>
+        </div>
+
+        <!-- Daily Store Tip -->
+        <div class="tip-box">
+            <p id="dailyTip"></p>
+        </div>
+    </div>
+</body>
+</html>
