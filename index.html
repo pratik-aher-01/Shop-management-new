@@ -1,357 +1,55 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <link rel="stylesheet" href="styles.css">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shop Management System</title>
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+<!-- templates/index.html -->
+{% extends "base.html" %}
 
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        .nav {
-            background-color: #333;
-            color: white;
-            padding: 15px;
-            margin-bottom: 20px;
-        }
-
-        .nav button {
-            background-color: #4CAF50;
-            border: none;
-            color: white;
-            padding: 10px 20px;
-            margin-right: 10px;
-            cursor: pointer;
-        }
-
-        .section {
-            display: none;
-            background-color: white;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-
-        .active {
-            display: block;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
-
-        th {
-            background-color: #4CAF50;
-            color: white;
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        input[type="text"], input[type="number"] {
-            width: 100%;
-            padding: 8px;
-            margin-top: 5px;
-        }
-
-        .btn {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            cursor: pointer;
-        }
-    </style>
-</head>
-<body>
-    <div class="nav">
-        <button onclick="showSection('dashboard')">Dashboard</button>
-        <button onclick="showSection('inventory')">Inventory</button>
-        <button onclick="showSection('sales')">Sales</button>
-        <button onclick="showSection('customers')">Customers</button>
-    </div>
-
-    <div class="container">
-        <!-- Dashboard Section -->
-        <div id="dashboard" class="section active">
-            <h2>Dashboard</h2>
-            <div class="stats">
-                <div class="stat-item">
-                    <h3>Total Products</h3>
-                    <p id="totalProducts">0</p>
-                </div>
-                <div class="stat-item">
-                    <h3>Today's Sales</h3>
-                    <p id="todaySales">$0.00</p>
-                </div>
-                <div class="stat-item">
-                    <h3>Total Customers</h3>
-                    <p id="totalCustomers">0</p>
+{% block content %}
+    <h1 class="mb-4">Shop Management System</h1>
+    
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Total Products</h5>
+                    <h2>{{ total_products }}</h2>
                 </div>
             </div>
         </div>
-
-        <!-- Inventory Section -->
-        <div id="inventory" class="section">
-            <h2>Inventory Management</h2>
-            <form id="productForm" onsubmit="addProduct(event)">
-                <div class="form-group">
-                    <label>Product Name:</label>
-                    <input type="text" id="productName" required>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Total Sales</h5>
+                    <h2>{{ total_sales }}</h2>
                 </div>
-                <div class="form-group">
-                    <label>Price:</label>
-                    <input type="number" id="productPrice" step="0.01" required>
-                </div>
-                <div class="form-group">
-                    <label>Quantity:</label>
-                    <input type="number" id="productQuantity" required>
-                </div>
-                <button type="submit" class="btn">Add Product</button>
-            </form>
-            <table id="inventoryTable">
-                <thead>
-                    <tr>
-                        <th>Product</th>
-                        <th>Price</th>
-                        <th>Quantity</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-        </div>
-
-        <!-- Sales Section -->
-        <div id="sales" class="section">
-            <h2>Sales Management</h2>
-            <form id="saleForm" onsubmit="recordSale(event)">
-                <div class="form-group">
-                    <label>Select Product:</label>
-                    <select id="saleProduct" required></select>
-                </div>
-                <div class="form-group">
-                    <label>Quantity:</label>
-                    <input type="number" id="saleQuantity" required>
-                </div>
-                <button type="submit" class="btn">Record Sale</button>
-            </form>
-            <h3>Sales History</h3>
-            <table id="salesTable">
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Product</th>
-                        <th>Quantity</th>
-                        <th>Total</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-        </div>
-
-        <!-- Customers Section -->
-        <div id="customers" class="section">
-            <h2>Customer Management</h2>
-            <form id="customerForm" onsubmit="addCustomer(event)">
-                <div class="form-group">
-                    <label>Customer Name:</label>
-                    <input type="text" id="customerName" required>
-                </div>
-                <div class="form-group">
-                    <label>Phone:</label>
-                    <input type="text" id="customerPhone" required>
-                </div>
-                <button type="submit" class="btn">Add Customer</button>
-            </form>
-            <table id="customersTable">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Phone</th>
-                        <th>Total Purchases</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
+            </div>
         </div>
     </div>
 
-    <script>
-        // Data Storage
-        let products = JSON.parse(localStorage.getItem('products')) || [];
-        let sales = JSON.parse(localStorage.getItem('sales')) || [];
-        let customers = JSON.parse(localStorage.getItem('customers')) || [];
-
-        // Section Navigation
-        function showSection(sectionId) {
-            document.querySelectorAll('.section').forEach(section => {
-                section.classList.remove('active');
-            });
-            document.getElementById(sectionId).classList.add('active');
-        }
-
-        // Inventory Management
-        function addProduct(e) {
-            e.preventDefault();
-            const product = {
-                id: Date.now(),
-                name: document.getElementById('productName').value,
-                price: parseFloat(document.getElementById('productPrice').value),
-                quantity: parseInt(document.getElementById('productQuantity').value)
-            };
-            products.push(product);
-            localStorage.setItem('products', JSON.stringify(products));
-            updateInventoryTable();
-            document.getElementById('productForm').reset();
-        }
-
-        function updateInventoryTable() {
-            const tbody = document.querySelector('#inventoryTable tbody');
-            tbody.innerHTML = '';
-            products.forEach(product => {
-                tbody.innerHTML += `
-                    <tr>
-                        <td>${product.name}</td>
-                        <td>$${product.price.toFixed(2)}</td>
-                        <td>${product.quantity}</td>
-                        <td>
-                            <button onclick="deleteProduct(${product.id})">Delete</button>
-                            <button onclick="editProduct(${product.id})">Edit</button>
-                        </td>
-                    </tr>
-                `;
-            });
-            updateDashboard();
-        }
-
-        function deleteProduct(id) {
-            products = products.filter(product => product.id !== id);
-            localStorage.setItem('products', JSON.stringify(products));
-            updateInventoryTable();
-        }
-
-        // Sales Management
-        function recordSale(e) {
-            e.preventDefault();
-            const productId = parseInt(document.getElementById('saleProduct').value);
-            const quantity = parseInt(document.getElementById('saleQuantity').value);
-            
-            const product = products.find(p => p.id === productId);
-            if (product.quantity >= quantity) {
-                product.quantity -= quantity;
-                const sale = {
-                    date: new Date().toLocaleString(),
-                    productId: productId,
-                    productName: product.name,
-                    quantity: quantity,
-                    total: quantity * product.price
-                };
-                sales.push(sale);
-                localStorage.setItem('sales', JSON.stringify(sales));
-                localStorage.setItem('products', JSON.stringify(products));
-                updateSalesTable();
-                updateInventoryTable();
-                document.getElementById('saleForm').reset();
-            } else {
-                alert('Not enough stock!');
-            }
-        }
-
-        function updateSalesTable() {
-            const tbody = document.querySelector('#salesTable tbody');
-            tbody.innerHTML = '';
-            sales.forEach(sale => {
-                tbody.innerHTML += `
-                    <tr>
-                        <td>${sale.date}</td>
-                        <td>${sale.productName}</td>
-                        <td>${sale.quantity}</td>
-                        <td>$${sale.total.toFixed(2)}</td>
-                    </tr>
-                `;
-            });
-            updateDashboard();
-        }
-
-        // Customer Management
-        function addCustomer(e) {
-            e.preventDefault();
-            const customer = {
-                id: Date.now(),
-                name: document.getElementById('customerName').value,
-                phone: document.getElementById('customerPhone').value,
-                totalPurchases: 0
-            };
-            customers.push(customer);
-            localStorage.setItem('customers', JSON.stringify(customers));
-            updateCustomersTable();
-            document.getElementById('customerForm').reset();
-        }
-
-        function updateCustomersTable() {
-            const tbody = document.querySelector('#customersTable tbody');
-            tbody.innerHTML = '';
-            customers.forEach(customer => {
-                tbody.innerHTML += `
-                    <tr>
-                        <td>${customer.name}</td>
-                        <td>${customer.phone}</td>
-                        <td>$${customer.totalPurchases.toFixed(2)}</td>
-                    </tr>
-                `;
-            });
-            updateDashboard();
-        }
-
-        // Dashboard Updates
-        function updateDashboard() {
-            document.getElementById('totalProducts').textContent = products.length;
-            document.getElementById('todaySales').textContent = `$${sales
-                .filter(sale => new Date(sale.date).toDateString() === new Date().toDateString())
-                .reduce((sum, sale) => sum + sale.total, 0)
-                .toFixed(2)}`;
-            document.getElementById('totalCustomers').textContent = customers.length;
-        }
-
-        // Initialize
-        function init() {
-            updateInventoryTable();
-            updateSalesTable();
-            updateCustomersTable();
-            
-            // Populate product dropdown
-            const saleProduct = document.getElementById('saleProduct');
-            saleProduct.innerHTML = products.map(product => 
-                `<option value="${product.id}">${product.name}</option>`
-            ).join('');
-        }
-
-        init();
-    </script>
-</body>
-</html>
+    <h3>Products</h3>
+    <a href="{{ url_for('add_product') }}" class="btn btn-primary mb-3">Add New Product</a>
+    
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in products %}
+            <tr>
+                <td>{{ product.name }}</td>
+                <td>${{ product.price }}</td>
+                <td>{{ product.quantity }}</td>
+                <td>
+                    <form method="POST" action="{{ url_for('sell_product', product_id=product.id) }}" class="d-inline">
+                        <input type="number" name="quantity" min="1" max="{{ product.quantity }}" required>
+                        <button type="submit" class="btn btn-sm btn-success">Sell</button>
+                    </form>
+                    <a href="{{ url_for('delete_product', product_id=product.id) }}" class="btn btn-sm btn-danger">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
